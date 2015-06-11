@@ -30,6 +30,11 @@ final class Money implements Serializable, Comparable {
         this.currency = Currency.getInstance(currency)
     }
 
+    Money(BigDecimal amount, String currencyCode) {
+        this.amount = amount
+        this.currency = Currency.getInstance(currencyCode)
+    }
+
     Money(String value, String currencyCode) {
         this.amount = new BigDecimal(value)
         this.currency = Currency.getInstance(currencyCode)
