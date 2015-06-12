@@ -1,3 +1,6 @@
+import grails.converters.JSON
+import com.ticketbis.money.Money
+
 class GrailsMoneyGrailsPlugin {
     // the plugin version
     def version = "0.1"
@@ -42,6 +45,11 @@ Brief summary/description of the plugin.
 
     def doWithSpring = {
         // TODO Implement runtime spring config (optional)
+        JSON.registerObjectMarshaller(Money) {
+            def returnArray = [:]
+            returnArray['amount'] = it.amount
+            return returnArray
+        }
     }
 
     def doWithDynamicMethods = { ctx ->
