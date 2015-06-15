@@ -22,6 +22,11 @@ final class Money implements Serializable, Comparable, MoneyExchange {
         }
     }
 
+    Money(Money other) {
+        this.amount = other.amount
+        this.currency = other.currency
+    }
+
     Money(Number amount, Currency currency) {
         this.amount = (BigDecimal) amount
         this.currency = currency

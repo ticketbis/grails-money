@@ -1,5 +1,8 @@
 package com.ticketbis.money
 
+import java.text.DecimalFormat
+import java.text.NumberFormat
+
 class MoneyTagLib {
     static namespace = 'money'
 
@@ -33,5 +36,23 @@ class MoneyTagLib {
                 <input type="hidden" name="${ name }_parseFormat" value="${ parseFormat }">
             """
         }
+    }
+
+    def format = { attrs ->
+        Money value = new Money(attrs.value)
+
+        NumberFormat formatter
+        if (attrs.numberFormat) {
+            formatter = attrs.numberFormat
+
+        } else if (attrs.pattern) {
+            formatter = new DecimalFormat(attrs.pattern)
+            formatter.currency = value.currency
+        } else {
+            formatter = new DecimalFormat()
+            formatter.currency = value.currency
+        }
+
+        out << formatter.format(value.amount)
     }
 }
