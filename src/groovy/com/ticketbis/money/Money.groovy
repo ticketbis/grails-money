@@ -101,6 +101,13 @@ final class Money implements Serializable, Comparable, MoneyExchange {
     }
 
     /**
+      * Returns new Money with (-amount) value.
+      */
+    Money negative() {
+        new Money(amount.negate(MONETARY_CONTEXT), currency)
+    }
+
+    /**
       * Add a Number to this Money.
       * Currencies must match.
       */
