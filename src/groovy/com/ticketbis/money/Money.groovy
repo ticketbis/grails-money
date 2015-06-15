@@ -45,11 +45,9 @@ final class Money implements Serializable, Comparable, MoneyExchange {
     }
 
     boolean equals(Object other) {
-        if (!other)                     return false
-        if (!(other instanceof Money))  return false
-        if (currency != other.currency) return false
-        if (amount != other.amount)     return false
-        true
+        if (!(other instanceof Money))
+            return false
+        currency == other.currency && amount == other.amount
     }
 
     String toString() {
