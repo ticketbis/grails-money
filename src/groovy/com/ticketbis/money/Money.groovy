@@ -4,7 +4,7 @@ import java.math.MathContext
 import java.math.BigDecimal
 import java.text.DecimalFormat
 
-final class Money implements Serializable, Comparable {
+final class Money implements Serializable, Comparable, MoneyExchange {
     final BigDecimal amount
     final Currency currency
 
