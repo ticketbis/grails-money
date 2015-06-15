@@ -4,12 +4,15 @@ import java.math.MathContext
 import java.math.BigDecimal
 import java.text.DecimalFormat
 
+@groovy.transform.CompileStatic
 final class Money implements Serializable, Comparable, MoneyExchange {
     final BigDecimal amount
     final Currency currency
 
-    private final static DECIMAL_FORMATTER = new DecimalFormat( "###,##0.00" )
-    private final static MONETARY_CONTEXT = MathContext.DECIMAL32
+    private final static DecimalFormat DECIMAL_FORMATTER =
+        new DecimalFormat( "###,##0.00" )
+
+    private final static MathContext MONETARY_CONTEXT = MathContext.DECIMAL32
 
     final static Money ZERO = new Money(BigDecimal.ZERO, Currency.getInstance('EUR'))
 
@@ -19,19 +22,19 @@ final class Money implements Serializable, Comparable, MoneyExchange {
         }
     }
 
-    Money(BigDecimal amount, Currency currency) {
-        this.amount = amount
+    Money(Number amount, Currency currency) {
+        this.amount = (BigDecimal) amount
         this.currency = currency
     }
 
     Money(String value) {
-        def (amount, currency) = value.split(/\s+/)
-        this.amount = new BigDecimal(amount)
-        this.currency = Currency.getInstance(currency)
+        String[] parts = value.split(/\s+/)
+        this.amount = new BigDecimal(parts[0])
+        this.currency = Currency.getInstance(parts[1])
     }
 
-    Money(BigDecimal amount, String currencyCode) {
-        this.amount = amount
+    Money(Number amount, String currencyCode) {
+        this.amount = (BigDecimal) amount
         this.currency = Currency.getInstance(currencyCode)
     }
 
@@ -45,9 +48,9 @@ final class Money implements Serializable, Comparable, MoneyExchange {
     }
 
     boolean equals(Object other) {
-        if (!(other instanceof Money))
-            return false
-        currency == other.currency && amount == other.amount
+        other instanceof Money &&
+            currency == ((Money) other).currency &&
+            amount == ((Money) other).amount
     }
 
     String toString() {
@@ -56,7 +59,10 @@ final class Money implements Serializable, Comparable, MoneyExchange {
     }
 
     int compareTo(Object other) {
-        if (!(other instanceof Money)) return 1
+        compareTo((Money) other)
+    }
+
+    int compareTo(Money other) {
         checkCurrenciesMatch(other)
         amount <=> other.amount
     }
@@ -99,8 +105,7 @@ final class Money implements Serializable, Comparable, MoneyExchange {
       * Currencies must match.
       */
     Money plus(Number n) {
-        if (!n) n = BigDecimal.ONE
-        new Money(amount.add(n, MONETARY_CONTEXT), currency)
+        new Money(amount.add((BigDecimal) n, MONETARY_CONTEXT), currency)
     }
 
     /**
@@ -108,8 +113,7 @@ final class Money implements Serializable, Comparable, MoneyExchange {
       * Currencies must match.
       */
     Money minus(Number n) {
-        if (!n) n = BigDecimal.ONE
-        new Money(amount.subtract(n, MONETARY_CONTEXT), currency)
+        new Money(amount.subtract((BigDecimal) n, MONETARY_CONTEXT), currency)
     }
 
     /**
@@ -119,8 +123,7 @@ final class Money implements Serializable, Comparable, MoneyExchange {
     * 'this' Money.
     */
     Money multiply(Number n) {
-        if (!n) n = BigDecimal.ONE
-        new Money(amount.multiply(n, MONETARY_CONTEXT), currency)
+        new Money(amount.multiply((BigDecimal) n, MONETARY_CONTEXT), currency)
     }
 
     /**
@@ -130,8 +133,7 @@ final class Money implements Serializable, Comparable, MoneyExchange {
     * 'this' Money.
     */
     Money div(Number n) {
-        assert n != 0
-        return new Money(amount.divide(n, MONETARY_CONTEXT), currency)
+        new Money(amount.divide((BigDecimal) n, MONETARY_CONTEXT), currency)
     }
 
     /**
@@ -148,7 +150,7 @@ final class Money implements Serializable, Comparable, MoneyExchange {
     private void checkCurrenciesMatch(Money other) {
         if (!isSameCurrencyAs(other)) {
             throw new CurrencyMismatchException(
-                other.currency + " doesn't match the expected currency : " + currency
+                "${ other.currency } doesn't match the expected currency : ${ currency }"
             )
         }
     }
