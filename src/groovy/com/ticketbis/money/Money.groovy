@@ -9,9 +9,6 @@ final class Money implements Serializable, Comparable, MoneyExchange {
     final BigDecimal amount
     final Currency currency
 
-    private final static DecimalFormat DECIMAL_FORMATTER =
-        new DecimalFormat( "###,##0.00" )
-
     private final static MathContext MONETARY_CONTEXT = MathContext.DECIMAL32
 
     final static Money ZERO = new Money(BigDecimal.ZERO, Currency.getInstance('EUR'))
@@ -59,8 +56,7 @@ final class Money implements Serializable, Comparable, MoneyExchange {
     }
 
     String toString() {
-        String formatted = DECIMAL_FORMATTER.format(amount)
-        "${ formatted } ${ currency?.currencyCode }"
+        "${ amount } ${ currency }"
     }
 
     int compareTo(Object other) {
@@ -78,11 +74,6 @@ final class Money implements Serializable, Comparable, MoneyExchange {
       */
     Money clone() {
         this // Money is inmutable class
-    }
-
-      /** Return the negative amount value. */
-    Money negate() {
-        new Money(-amount, currency)
     }
 
     /**
