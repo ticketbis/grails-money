@@ -14,6 +14,8 @@ class MoneySpec extends Specification {
         eur12 == new Money('12.0 EUR')
         eur12 == new Money(12, 'EUR')
         eur12 == new Money('12', 'EUR')
+        eur12 != new Money(12, 'USD')
+        eur12 != new Money(20, 'EUR')
     }
 
     void "test money basic arithmetic"() {
