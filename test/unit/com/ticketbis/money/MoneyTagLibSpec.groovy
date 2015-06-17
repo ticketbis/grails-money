@@ -44,10 +44,10 @@ class MoneyTagLibSpec extends Specification {
 
     void "test money formatting"() {
     given:
-        def money = new Money(1234.5G, Currency.getInstance('USD'))
+        def money = new Money(1234.5G, 'RUB')
 
     expect:
-        'USD 1,234.50' == applyTemplate(
+        'RUB 1,234.50' == applyTemplate(
             '<money:format value="${ money }" pattern="¤ ##,##0.00"/>', [money: money])
     }
 
