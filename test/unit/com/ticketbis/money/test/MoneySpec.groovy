@@ -6,6 +6,10 @@ import com.ticketbis.money.*
 
 class MoneySpec extends Specification {
 
+    void setup() {
+        Number.mixin(NumberMoneyExtension)
+    }
+
     void "test money constructors"() {
     given:
         def eur12 = new Money(12.0G, 'EUR')
@@ -58,5 +62,16 @@ class MoneySpec extends Specification {
     expect:
         eur40 == eur20 * 2
         eur20 == eur40 / 2.0G
+    }
+
+    void "test number extension"() {
+    given:
+        def eur20 = new Money(20, 'EUR')
+
+    expect:
+        20 + eur20 == new Money(40, 'EUR')
+        40 - eur20 == new Money(20, 'EUR')
+        2 * eur20 == new Money(40, 'EUR')
+        eur20 == 20.toMoney(Currency.getInstance('EUR'))
     }
 }

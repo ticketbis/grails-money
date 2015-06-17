@@ -1,5 +1,6 @@
 import grails.converters.JSON
 import com.ticketbis.money.Money
+import com.ticketbis.money.NumberMoneyExtension
 
 class GrailsMoneyGrailsPlugin {
     // the plugin version
@@ -56,7 +57,7 @@ Brief summary/description of the plugin.
     }
 
     def doWithDynamicMethods = { ctx ->
-        // TODO Implement registering dynamic methods to classes (optional)
+        Number.mixin(NumberMoneyExtension)
     }
 
     def doWithApplicationContext = { ctx ->
