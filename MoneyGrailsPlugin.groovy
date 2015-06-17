@@ -2,7 +2,7 @@ import grails.converters.JSON
 import com.ticketbis.money.Money
 import com.ticketbis.money.NumberMoneyExtension
 
-class GrailsMoneyGrailsPlugin {
+class MoneyGrailsPlugin {
     // the plugin version
     def version = "0.1"
     // the version or versions of Grails the plugin is designed for
