@@ -40,6 +40,8 @@ trait MoneyExchange {
     }
 
     static Exchange getCurrentExchange() {
-        localExchangeStack.get()?.peek() ?: defaultExchange
+        localExchangeStack.get()?.size() ?
+            localExchangeStack.get()?.peek() :
+            defaultExchange
     }
 }

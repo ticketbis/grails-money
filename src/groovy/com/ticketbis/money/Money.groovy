@@ -5,7 +5,7 @@ import java.math.BigDecimal
 import java.text.DecimalFormat
 
 @groovy.transform.CompileStatic
-final class Money implements Serializable, Comparable, MoneyExchange {
+final class Money implements Serializable, Comparable<Money>, MoneyExchange {
     final BigDecimal amount
     final Currency currency
 
@@ -55,22 +55,31 @@ final class Money implements Serializable, Comparable, MoneyExchange {
     }
 
     boolean equals(Object other) {
-        other instanceof Money &&
-            currency == ((Money) other).currency &&
-            amount == ((Money) other).amount
+        other instanceof Money && this == (Money) other
+    }
+
+    boolean equals(Money other) {
+        (amount == 0 && other.amount == 0) || (
+            currency == other.currency &&
+            amount == other.amount
+        )
     }
 
     String toString() {
         "${ amount } ${ currency }"
     }
 
-    int compareTo(Object other) {
-        compareTo((Money) other)
-    }
-
     int compareTo(Money other) {
-        checkCurrenciesMatch(other)
-        amount <=> other.amount
+        if (amount == 0 && other.amount == 0)
+            return 0 // No money :[
+
+        if (currency == other.currency)
+            return amount <=> other.amount
+
+        if (Money.getCurrentExchange())
+            return amount <=> other.exchangeTo(currency).amount
+
+        currency.currencyCode <=> other.currency.currencyCode
     }
 
     /**
