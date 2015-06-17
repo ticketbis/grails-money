@@ -44,12 +44,15 @@ Brief summary/description of the plugin.
     }
 
     def doWithSpring = {
-        // TODO Implement runtime spring config (optional)
+        // Object Marshaller register
         JSON.registerObjectMarshaller(Money) {
             def returnArray = [:]
             returnArray['amount'] = it.amount
             return returnArray
         }
+
+        //Custom structured property editor data binding for Money type
+        moneyEditor com.ticketbis.money.StructuredMoneyEditor
     }
 
     def doWithDynamicMethods = { ctx ->
