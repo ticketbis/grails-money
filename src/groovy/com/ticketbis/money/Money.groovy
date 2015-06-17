@@ -24,15 +24,15 @@ final class Money implements Serializable, Comparable, MoneyExchange {
         this.currency = other.currency
     }
 
+    Money(String money) {
+        String[] parts = money.split(/\s+/)
+        this.amount = new BigDecimal(parts[0])
+        this.currency = Currency.getInstance(parts[1])
+    }
+
     Money(Number amount, Currency currency) {
         this.amount = (BigDecimal) amount
         this.currency = currency
-    }
-
-    Money(String value) {
-        String[] parts = value.split(/\s+/)
-        this.amount = new BigDecimal(parts[0])
-        this.currency = Currency.getInstance(parts[1])
     }
 
     Money(Number amount, String currencyCode) {
@@ -40,9 +40,14 @@ final class Money implements Serializable, Comparable, MoneyExchange {
         this.currency = Currency.getInstance(currencyCode)
     }
 
-    Money(String value, String currencyCode) {
-        this.amount = new BigDecimal(value)
+    Money(String amount, String currencyCode) {
+        this.amount = new BigDecimal(amount)
         this.currency = Currency.getInstance(currencyCode)
+    }
+
+    Money(String amount, Currency currency) {
+        this.amount = new BigDecimal(amount)
+        this.currency = currency
     }
 
     int hashCode() {
