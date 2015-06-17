@@ -18,8 +18,6 @@ class MoneySpec extends Specification {
         eur12 == new Money('12.0 EUR')
         eur12 == new Money(12, 'EUR')
         eur12 == new Money('12', 'EUR')
-        eur12 != new Money(12, 'USD')
-        eur12 != new Money(20, 'EUR')
     }
 
     void "test money basic arithmetic"() {
@@ -35,7 +33,17 @@ class MoneySpec extends Specification {
         -eur20 - eur12 == -eur32
         eur20 + 12 == eur32
         eur32 - 12.0G == eur20
+    }
 
+    void "test money compare"() {
+        def eur12 = new Money(12.0G, 'EUR')
+
+    expect:
+        eur12 != new Money(12, 'USD')
+        eur12 != new Money(20, 'EUR')
+        new Money(0, 'EUR') == new Money(0, 'USD')
+        eur12 > new Money(5, 'EUR')
+        eur12 <= new Money(12, 'EUR')
     }
 
     void "test currency mistmatch"() {

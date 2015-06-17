@@ -24,10 +24,12 @@ class MoneyExchangeSpec extends Specification {
     final exchange_1_0 = new TestExchange(1.0G)
     final exchange_0_5 = new TestExchange(0.5G)
 
+    void setup() {
+        Money.defaultExchange = exchange_2_0
+    }
+
     void "test basic money exchange"() {
     given:
-        Money.defaultExchange = exchange_2_0
-
         def usd20 = new Money(20, 'USD')
     expect:
         Money.defaultExchange == exchange_2_0
@@ -39,23 +41,48 @@ class MoneyExchangeSpec extends Specification {
 
     void "test nested money exchange"() {
     given:
-        Money.defaultExchange = exchange_2_0
-
         def usd20 = new Money(20, 'USD')
     expect:
         Money.withExchange(exchange_1_0) {
             assert usd20.exchangeTo(eur) == new Money(20, 'EUR')
-            assert usd20.exchangeTo(cad) == new Money(20, 'CAD')
-
             Money.withExchange(exchange_0_5) {
                 assert usd20.exchangeTo(eur) == new Money(10, 'EUR')
                 assert usd20.exchangeTo(cad) == new Money(10, 'CAD')
-
-                 Money.withExchange(exchange_2_0) {
-                    assert usd20.exchangeTo(eur) == new Money(40, 'EUR')
-                    assert usd20.exchangeTo(cad) == new Money(40, 'CAD')
-                }
             }
+            assert usd20.exchangeTo(cad) == new Money(20, 'CAD')
+        }
+    }
+
+    void "test exceptions in nested money exchange"() {
+    given:
+        def usd20 = new Money(20, 'USD')
+        def exception = new Exception("Test exception")
+    expect:
+        Money.withExchange(exchange_0_5) {
+            assert usd20.exchangeTo(eur) == new Money(10, 'EUR')
+            try {
+                Money.withExchange(exchange_2_0) {
+                    assert usd20.exchangeTo(eur) == new Money(40, 'EUR')
+                    throw exception
+                }
+            } catch (ex) {
+                assert ex.is(exception)
+            }
+            assert usd20.exchangeTo(cad) == new Money(10, 'CAD')
+        }
+    }
+
+    void "test compare with exchange"() {
+    given:
+        def usd20 = new Money(20, 'USD')
+    expect:
+        // with exchange_2_0 (EURUSD=2.0)
+        usd20 == new Money(10, 'EUR')
+        usd20 > new Money(8, 'EUR')
+        usd20 <= new Money(12, 'EUR')
+        Money.withExchange(exchange_1_0) {
+            usd20 >= new Money(19, 'EUR')
+            usd20 < new Money(21, 'EUR')
         }
     }
 
