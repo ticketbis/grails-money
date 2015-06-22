@@ -27,7 +27,7 @@ class MoneyTagLib {
                 join(' ')
 
         out << """
-            <input type="hidden" name="${ name }" value="money.struct">
+            <input type="hidden" name="${ name }" value="struct">
             <input type="hidden" name="${ name }_currency" value="${ currency }">
             <input type="$type" name="${ name }_amount" value="${ amount }" $attrsStr>
         """

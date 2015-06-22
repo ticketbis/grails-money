@@ -23,7 +23,7 @@ class MoneyTagLibSpec extends Specification {
                 '<money:inputField name="testMoney" value="123.45" currency="EUR"/>'
         )
     expect:
-        html =~ /value="money.struct"/
+        html =~ /value="struct"/
         html =~ /name="testMoney_amount".*value="123.45"/
         html =~ /name="testMoney_currency".*value="EUR"/
     }
@@ -37,7 +37,7 @@ class MoneyTagLibSpec extends Specification {
                 [money: money]
         )
     expect:
-        html =~ /value="money.struct"/
+        html =~ /value="struct"/
         html =~ /name="testMoney_amount".*value="123.45"/
         html =~ /name="testMoney_currency".*value="USD"/
     }
