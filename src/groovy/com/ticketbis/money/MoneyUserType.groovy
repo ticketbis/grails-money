@@ -12,30 +12,33 @@ import java.util.Currency
 
 import org.hibernate.HibernateException
 import org.hibernate.usertype.UserType
+import org.hibernate.usertype.ParameterizedType
 
-class MoneyUserType implements UserType {
+@groovy.transform.CompileStatic
+class MoneyUserType implements UserType, ParameterizedType {
 
-    private static final int[] SQL_TYPES = [Types.DECIMAL]
+    private final static String DEFAULT_CURRENCY_COLUMN = 'currency'
+    private final static int[] SQL_TYPES = [Types.DECIMAL] as int[]
 
-    Object assemble(Serializable cached, Object owner)
-            throws HibernateException {
+    Properties parameterValues
 
+    Object assemble(Serializable cached, Object owner) {
         cached
     }
 
-    Object deepCopy(Object o) throws HibernateException {
+    Object deepCopy(Object o) {
         o.clone()
     }
 
-    Serializable disassemble(Object value) throws HibernateException {
+    Serializable disassemble(Object value) {
         (Serializable) value
     }
 
-    boolean equals(Object x, Object y) throws HibernateException {
+    boolean equals(Object x, Object y) {
         x == y
     }
 
-    int hashCode(Object o) throws HibernateException {
+    int hashCode(Object o) {
         o.hashCode()
     }
 
@@ -43,23 +46,12 @@ class MoneyUserType implements UserType {
         false
     }
 
-    Object nullSafeGet(ResultSet rs, String[] names, Object owner)
-        throws HibernateException, SQLException {
-        assert names.length == 1
+    Object nullSafeGet(ResultSet rs, String[] names, Object owner) {
+        String amountColumnName = names[0]
+        int currencyColumnIdx = retrieveCurrencyColumnIdx(rs, amountColumnName)
 
-        String amount = rs.getString(names[0])
-        String currency = "EUR"
-
-        ResultSetMetaData rsmd = rs.getMetaData()
-        int columnCount = rsmd.getColumnCount()
-
-        // The column count starts from 1
-        for (int i = 1; i < columnCount + 1; i++ ) {
-              String name = rsmd.getColumnName(i)
-              if (name.equals("divisa")) {
-                  currency = rs.getString(i)
-              }
-        }
+        BigDecimal amount = rs.getBigDecimal(amountColumnName)
+        String currency = rs.getString(currencyColumnIdx)
 
         if (amount == null && currency == null)
             return null
@@ -67,21 +59,17 @@ class MoneyUserType implements UserType {
         new Money(amount, currency)
     }
 
-    void nullSafeSet(PreparedStatement st, Object value, int index)
-        throws HibernateException, SQLException {
-
+    void nullSafeSet(PreparedStatement st, Object value, int index) {
         if (value == null) {
-            st.setBigDecimal(index, BigDecimal.ZERO)
+            st.setBigDecimal(index, null)
         } else {
             Money money = (Money) value
-            st.setBigDecimal(index, money.getAmount())
+            st.setBigDecimal(index, money.amount)
         }
     }
 
-    Object replace(Object original, Object target, Object owner)
-            throws HibernateException {
-
-        return original
+    Object replace(Object original, Object target, Object owner) {
+        original
     }
 
     Class returnedClass() {
@@ -90,5 +78,25 @@ class MoneyUserType implements UserType {
 
     int[] sqlTypes() {
         SQL_TYPES
+    }
+
+    private int retrieveCurrencyColumnIdx(ResultSet rs, String amountColumnName) {
+        ResultSetMetaData rsmd = rs.getMetaData()
+        int columnCount = rsmd.getColumnCount()
+
+        // The column count starts from 1
+        int amountColumnIdx = (1..columnCount).find { i ->
+            rsmd.getColumnLabel(i) == amountColumnName
+        }
+
+        String tableName = rsmd.getTableName(amountColumnIdx)
+        String currencyColumn = parameterValues.currencyColumn ?:
+                                DEFAULT_CURRENCY_COLUMN
+
+        int currencyColumnIdx = (1..columnCount).find { i ->
+            currencyColumn == rsmd.getColumnName(i) &&
+                 tableName == rsmd.getTableName(i)
+        }
+        currencyColumnIdx
     }
 }
