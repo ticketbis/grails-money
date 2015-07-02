@@ -20,7 +20,16 @@ class MoneyTagLib {
         }
 
         def type = attrs.remove('type') ?: 'number'
-        def parseFormat = attrs.remove('parseFormat')
+        def numberFormat = attrs.remove('numberFormat')
+
+        String amountStr
+        if (numberFormat) {
+            amountStr = numberFormat.format(amount)
+        } else {
+            def currencySymbol = attrs.remove('currencySymbol') ?: ''
+            amountStr = formatNumber(number: amount, type: 'currency',
+                        currencyCode: currency, currencySymbol: currencySymbol)
+        }
 
         def attrsStr = attrs.
                 collect { attr, val -> "$attr=\"$val\"" }.
@@ -29,11 +38,18 @@ class MoneyTagLib {
         out << """
             <input type="hidden" name="${ name }" value="struct">
             <input type="hidden" name="${ name }_currency" value="${ currency }">
-            <input type="$type" name="${ name }_amount" value="${ amount }" $attrsStr>
+            <input type="$type" name="${ name }_amount" value="${ amountStr }" $attrsStr>
         """
-        if (parseFormat) {
+        if (numberFormat) {
             out << """
-                <input type="hidden" name="${ name }_parseFormat" value="${ parseFormat }">
+                <input type="hidden" name="${ name }_numberFormat.pattern" value="${ numberFormat.toPattern() }">
+
+                <input type="hidden" name="${ name }_numberFormat.decimalSeparator"
+                                    value="${ numberFormat.decimalFormatSymbols.decimalSeparator }">
+                <input type="hidden" name="${ name }_numberFormat.groupingSeparator"
+                                    value="${ numberFormat.decimalFormatSymbols.groupingSeparator }">
+                <input type="hidden" name="${ name }_numberFormat.currencySymbol"
+                                    value="${ numberFormat.decimalFormatSymbols.currencySymbol }">
             """
         }
     }
