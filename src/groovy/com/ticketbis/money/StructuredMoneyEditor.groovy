@@ -22,6 +22,7 @@ class StructuredMoneyEditor extends AbstractStructuredBindingEditor<Money> {
             formatter = new DecimalFormat((String) numberFormat.pattern)
 
             DecimalFormatSymbols dfs = new DecimalFormatSymbols()
+            dfs.monetaryDecimalSeparator = (char) numberFormat.decimalSeparator
             dfs.decimalSeparator = (char) numberFormat.decimalSeparator
             dfs.groupingSeparator = (char) numberFormat.groupingSeparator
             dfs.currencySymbol = numberFormat.currencySymbol
