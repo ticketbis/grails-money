@@ -14,7 +14,10 @@ import org.hibernate.HibernateException
 import org.hibernate.usertype.UserType
 import org.hibernate.usertype.ParameterizedType
 
+import groovy.util.logging.Log4j
+
 @groovy.transform.CompileStatic
+@Log4j
 class MoneyUserType implements UserType, ParameterizedType {
 
     private final static String DEFAULT_CURRENCY_COLUMN = 'currency'
@@ -51,12 +54,12 @@ class MoneyUserType implements UserType, ParameterizedType {
         int currencyColumnIdx = retrieveCurrencyColumnIdx(rs, amountColumnName)
 
         BigDecimal amount = rs.getBigDecimal(amountColumnName)
-        String currency = rs.getString(currencyColumnIdx)
+        String currency = currencyColumnIdx ? rs.getString(currencyColumnIdx) : null
 
         if (amount == null && currency == null)
             return null
 
-        new Money(amount, currency)
+        new Money(amount, currency ? Currency.getInstance(currency) : (Currency) null)
     }
 
     void nullSafeSet(PreparedStatement st, Object value, int index) {
@@ -93,10 +96,14 @@ class MoneyUserType implements UserType, ParameterizedType {
         String currencyColumn = parameterValues.currencyColumn ?:
                                 DEFAULT_CURRENCY_COLUMN
 
-        int currencyColumnIdx = (1..columnCount).find { i ->
-            currencyColumn == rsmd.getColumnName(i) &&
-                 tableName == rsmd.getTableName(i)
+        Integer currencyColumnIdx = (1..columnCount).find { i ->
+            currencyColumn == rsmd.getColumnName(i) && tableName == rsmd.getTableName(i)
         }
-        currencyColumnIdx
+
+        if (!currencyColumnIdx) {
+            log.warn "${ [columnCount, amountColumnIdx, tableName, currencyColumn, currencyColumnIdx] }"
+        }
+
+        currencyColumnIdx ?: 0
     }
 }
