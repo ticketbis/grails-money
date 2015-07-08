@@ -10,32 +10,14 @@ import groovy.transform.CompileStatic
 @CompileStatic
 class StructuredMoneyEditor extends AbstractStructuredBindingEditor<Money> {
 
+    private static final String currencyPlaceholder = '¤'
+
     Money getPropertyValue(Map values) {
-        // retrieve the individual values from the Map
-        String amount = values.amount
-        String currency = values.currency
 
-        // build decimal formatter
-        DecimalFormat formatter
-        if (values.numberFormatter) {
-            Map numberFormat = (Map) values.numberFormat
-            formatter = new DecimalFormat((String) numberFormat.pattern)
+        DecimalFormat formatter = getCustomDecimalFormatter(values)?:getLocaleAwareDecimalFormatter()
+        BigDecimal parsedAmount = getParsedAmount(formatter, (String) values.amount)
 
-            DecimalFormatSymbols dfs = new DecimalFormatSymbols()
-            dfs.monetaryDecimalSeparator = (char) numberFormat.decimalSeparator
-            dfs.decimalSeparator = (char) numberFormat.decimalSeparator
-            dfs.groupingSeparator = (char) numberFormat.groupingSeparator
-            dfs.currencySymbol = numberFormat.currencySymbol
-            formatter.decimalFormatSymbols = dfs
-        } else {
-            formatter = getLocaleAwareDecimalFormatter()
-        }
-        formatter.parseBigDecimal = true
-
-        BigDecimal parsedAmount = (BigDecimal) formatter.parse(amount)
-
-        // create and return a Money
-        new Money(parsedAmount, currency)
+        new Money(parsedAmount, (String) values.currency)
     }
 
     protected DecimalFormat getLocaleAwareDecimalFormatter() {
@@ -44,5 +26,36 @@ class StructuredMoneyEditor extends AbstractStructuredBindingEditor<Money> {
             throw new IllegalStateException("Cannot support non-DecimalFormat: " + formatter)
         }
         (DecimalFormat) formatter
+    }
+
+    private DecimalFormat getCustomDecimalFormatter(Map values) {
+
+        String amount = (String) values.amount
+        DecimalFormat formatter
+
+        if (values.numberFormat) {
+            Map numberFormat = (Map) values.numberFormat
+            String customPattern = (String) numberFormat.pattern
+
+            DecimalFormatSymbols dfs = new DecimalFormatSymbols()
+            dfs.monetaryDecimalSeparator = (char) numberFormat.decimalSeparator
+            dfs.decimalSeparator = (char) numberFormat.decimalSeparator
+            dfs.groupingSeparator = (char) numberFormat.groupingSeparator
+            dfs.currencySymbol = numberFormat.currencySymbol
+
+            String currencySymbol = numberFormat.currencySymbol
+            String pattern = amount.contains(currencySymbol) ?
+                customPattern : customPattern.replace(currencyPlaceholder, '').trim()
+
+            formatter = new DecimalFormat(pattern, dfs)
+        }
+
+    formatter
+    }
+
+    private  BigDecimal getParsedAmount( DecimalFormat formatter, String amount) {
+        formatter.parseBigDecimal = true
+
+        formatter.parse(amount)
     }
 }
