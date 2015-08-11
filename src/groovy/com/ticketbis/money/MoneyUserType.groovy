@@ -58,7 +58,7 @@ class MoneyUserType implements UserType, ParameterizedType {
         if (amount == null && currency == null)
             return null
 
-        new Money(amount, currency ? Currency.getInstance(currency) : (Currency) null)
+        new Money(amount, (Currency) (currency ? Currency.getInstance(currency) :  null))
     }
 
     void nullSafeSet(PreparedStatement st, Object value, int index) {
