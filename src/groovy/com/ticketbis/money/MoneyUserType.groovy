@@ -16,7 +16,6 @@ import org.hibernate.usertype.ParameterizedType
 
 import groovy.util.logging.Log4j
 
-@groovy.transform.CompileStatic
 @Log4j
 class MoneyUserType implements UserType, ParameterizedType {
 
