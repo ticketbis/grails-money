@@ -9,7 +9,7 @@ final class Money implements Serializable, Comparable<Money>, MoneyExchange {
     final BigDecimal amount
     final Currency currency
 
-    private final static MathContext MONETARY_CONTEXT = MathContext.DECIMAL32
+    private final static MathContext MONETARY_CONTEXT = MathContext.DECIMAL128
 
     final static Money ZERO = new Money(BigDecimal.ZERO, Currency.getInstance('EUR'))
 
