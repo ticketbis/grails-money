@@ -1,7 +1,7 @@
 package com.ticketbis.money.test
 
 import spock.lang.Specification
-
+import java.math.RoundingMode
 import com.ticketbis.money.*
 
 class MoneySpec extends Specification {
@@ -81,5 +81,14 @@ class MoneySpec extends Specification {
         40 - eur20 == new Money(20, 'EUR')
         2 * eur20 == new Money(40, 'EUR')
         eur20 == 20.toMoney(Currency.getInstance('EUR'))
+    }
+
+    void "test rounding moneys"() {
+    given:
+        def eur20 = new Money(20.1G, 'EUR')
+
+    expect:
+        eur20.setScale(0, RoundingMode.CEILING) == new Money('21 EUR')
+        eur20.setScale(0, RoundingMode.HALF_DOWN) == new Money('20 EUR')
     }
 }

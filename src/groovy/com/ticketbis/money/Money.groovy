@@ -2,7 +2,7 @@ package com.ticketbis.money
 
 import java.math.MathContext
 import java.math.BigDecimal
-import java.text.DecimalFormat
+import java.math.RoundingMode
 
 @groovy.transform.CompileStatic
 final class Money implements Serializable, Comparable<Money>, MoneyExchange {
@@ -151,6 +151,13 @@ final class Money implements Serializable, Comparable<Money>, MoneyExchange {
     */
     Money div(Number n) {
         new Money(amount.divide((BigDecimal) n, MONETARY_CONTEXT), currency)
+    }
+
+    /**
+     * Returns new Money scaled to specified value
+     */
+    Money setScale(int newScale, RoundingMode rounding) {
+        new Money(amount.setScale(newScale, rounding), currency)
     }
 
     /**
