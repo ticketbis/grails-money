@@ -50,7 +50,7 @@ class MoneyUserType implements UserType, ParameterizedType {
 
     Object nullSafeGet(ResultSet rs, String[] names, Object owner) {
         String amountColumnName = names[0]
-        int currencyColumnIdx = retrieveCurrencyColumnIdx(rs, amountColumnName)
+        Integer currencyColumnIdx = retrieveCurrencyColumnIdx(rs, amountColumnName)
 
         BigDecimal amount = rs.getBigDecimal(amountColumnName)
         String currency = currencyColumnIdx ? rs.getString(currencyColumnIdx) : null
@@ -82,14 +82,17 @@ class MoneyUserType implements UserType, ParameterizedType {
         SQL_TYPES
     }
 
-    private int retrieveCurrencyColumnIdx(ResultSet rs, String amountColumnName) {
+    private Integer retrieveCurrencyColumnIdx(ResultSet rs, String amountColumnName) {
         ResultSetMetaData rsmd = rs.getMetaData()
         int columnCount = rsmd.getColumnCount()
 
         // The column count starts from 1
-        int amountColumnIdx = (1..columnCount).find { i ->
+        Integer amountColumnIdx = (1..columnCount).find { i ->
             rsmd.getColumnLabel(i) == amountColumnName
         }
+
+        if (!amountColumnIdx)
+            return null
 
         String tableName = rsmd.getTableName(amountColumnIdx)
         String currencyColumn = parameterValues.currencyColumn ?:
@@ -103,6 +106,6 @@ class MoneyUserType implements UserType, ParameterizedType {
             log.warn "${ [columnCount, amountColumnIdx, tableName, currencyColumn, currencyColumnIdx] }"
         }
 
-        currencyColumnIdx ?: 0
+        currencyColumnIdx
     }
 }
