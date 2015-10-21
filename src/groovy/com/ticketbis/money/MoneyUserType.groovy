@@ -99,11 +99,12 @@ class MoneyUserType implements UserType, ParameterizedType {
                                 DEFAULT_CURRENCY_COLUMN
 
         Integer currencyColumnIdx = (1..columnCount).find { i ->
-            currencyColumn == rsmd.getColumnName(i) && tableName == rsmd.getTableName(i)
+            currencyColumn == rsmd.getColumnName(i) &&
+                (!tableName || tableName == rsmd.getTableName(i))
         }
 
         if (!currencyColumnIdx) {
-            log.warn "${ [columnCount, amountColumnIdx, tableName, currencyColumn, currencyColumnIdx] }"
+            log.warn "Unable to find currency column '${ currencyColumn }' in result set"
         }
 
         currencyColumnIdx
