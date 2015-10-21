@@ -14,7 +14,7 @@ class MoneyGrailsPlugin {
 
     // TODO Fill in these fields
     def title = "Grails Money Plugin" // Headline display name of the plugin
-    def author = "Alvaro Salazar & Endika Gutiérrez"
+    def author = "David Santamaría & Álvaro Salazar & Endika Gutiérrez"
     def authorEmail = ""
     def description = '''\
 Grails plugin for manage money and currency exchange
