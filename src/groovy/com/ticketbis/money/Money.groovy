@@ -11,12 +11,17 @@ final class Money implements Serializable, Comparable<Money>, MoneyExchange {
 
     private final static MathContext MONETARY_CONTEXT = MathContext.DECIMAL128
 
-    final static Money ZERO = new Money(BigDecimal.ZERO, Currency.getInstance('EUR'))
+    final static Money ZERO = new Money()
 
     final static class CurrencyMismatchException extends RuntimeException {
         CurrencyMismatchException(String aMessage) {
             super(aMessage)
         }
+    }
+
+    Money() {
+        this.amount = BigDecimal.ZERO
+        this.currency = Currency.getInstance('EUR')
     }
 
     Money(Money other) {

@@ -14,6 +14,7 @@ class MoneySpec extends Specification {
     given:
         def eur12 = new Money(12.0G, 'EUR')
     expect:
+        Money.ZERO == new Money()
         eur12 == new Money('12 EUR')
         eur12 == new Money('12.0 EUR')
         eur12 == new Money(12, 'EUR')
