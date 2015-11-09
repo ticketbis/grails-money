@@ -10,7 +10,7 @@ Grails plugin for manage money and currency exchange
 Add dependency to your BuildConfig;
 
 ```groovy
-compile "com.ticketbis:money:0.1.8"
+compile "com.ticketbis:money:0.1.9"
 ```
 
 ## Usage
