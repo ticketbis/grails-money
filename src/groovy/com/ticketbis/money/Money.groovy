@@ -116,6 +116,22 @@ final class Money implements Serializable, Comparable<Money>, MoneyExchange {
     }
 
     /**
+      * Add other Money to this Money.
+      * Currencies must match.
+      */
+    Money add(Money other) {
+        plus(other)
+    }
+
+    /**
+      * Subtract other Money to this Money.
+      * Currencies must match.
+      */
+    Money subtract(Money other) {
+        minus(other)
+    }
+
+    /**
       * Returns new Money with (-amount) value.
       */
     Money negative() {
@@ -136,6 +152,22 @@ final class Money implements Serializable, Comparable<Money>, MoneyExchange {
       */
     Money minus(Number n) {
         new Money(amount.subtract((BigDecimal) n, MONETARY_CONTEXT), currency)
+    }
+
+    /**
+      * Add a Number to this Money.
+      * Currencies must match.
+      */
+    Money add(Number n) {
+        plus(n)
+    }
+
+    /**
+      * Subtract a Number to this Money.
+      * Currencies must match.
+      */
+    Money subtract(Number n) {
+        minus(n)
     }
 
     /**

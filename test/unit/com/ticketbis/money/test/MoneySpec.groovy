@@ -34,6 +34,12 @@ class MoneySpec extends Specification {
         -eur20 - eur12 == -eur32
         eur20 + 12 == eur32
         eur32 - 12.0G == eur20
+        eur12.add(eur20) == eur32
+        eur32.subtract(eur20) == eur12
+        eur12.subtract(eur32) == -eur20
+        (-eur20).subtract(eur12) == -eur32
+        eur20.add(12) == eur32
+        eur32.subtract(12.0G) == eur20
     }
 
     void "test money compare"() {
@@ -58,6 +64,14 @@ class MoneySpec extends Specification {
         thrown(Money.CurrencyMismatchException)
     when:
         usd20 - eur12
+    then:
+        thrown(Money.CurrencyMismatchException)
+    when:
+        eur12.add(usd20)
+    then:
+        thrown(Money.CurrencyMismatchException)
+    when:
+        usd20.subtract(eur12)
     then:
         thrown(Money.CurrencyMismatchException)
     }
