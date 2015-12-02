@@ -95,7 +95,7 @@ class MoneyUserType implements UserType, ParameterizedType {
             return null
 
         String tableName = rsmd.getTableName(amountColumnIdx)
-        String currencyColumn = parameterValues.currencyColumn ?:
+        String currencyColumn = parameterValues?.currencyColumn ?:
                                 DEFAULT_CURRENCY_COLUMN
 
         Integer currencyColumnIdx = (1..columnCount).find { i ->
