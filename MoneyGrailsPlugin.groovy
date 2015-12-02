@@ -4,7 +4,7 @@ import com.ticketbis.money.NumberMoneyExtension
 
 class MoneyGrailsPlugin {
     // the plugin version
-    def version = "0.1.9"
+    def version = "0.1.10"
     // the version or versions of Grails the plugin is designed for
     def grailsVersion = "2.4 > *"
     // resources that are excluded from plugin packaging
