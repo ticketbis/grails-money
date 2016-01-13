@@ -1,6 +1,8 @@
 import grails.converters.JSON
 import com.ticketbis.money.Money
 import com.ticketbis.money.NumberMoneyExtension
+import com.ticketbis.money.GreaterThanZeroConstraint
+import org.codehaus.groovy.grails.validation.ConstrainedProperty
 
 class MoneyGrailsPlugin {
     // the plugin version
@@ -54,6 +56,10 @@ Grails plugin for manage money and currency exchange
 
         //Custom structured property editor data binding for Money type
         moneyEditor com.ticketbis.money.StructuredMoneyEditor
+
+        ConstrainedProperty.registerNewConstraint(
+            GreaterThanZeroConstraint.CONSTRAINT_NAME,
+            GreaterThanZeroConstraint.class)
     }
 
     def doWithDynamicMethods = { ctx ->
