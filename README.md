@@ -3,7 +3,7 @@
 [![Build
 Status](https://travis-ci.org/ticketbis/grails-money.png?branch=master)](https://travis-ci.org/ticketbis/grails-money)
 
-Grails plugin for manage money and currency exchange
+Grails plugin for money and currency exchange management
 
 ## Installation
 
