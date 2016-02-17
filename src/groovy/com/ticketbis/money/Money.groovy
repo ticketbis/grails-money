@@ -201,7 +201,7 @@ final class Money implements Serializable, Comparable<Money>, MoneyExchange {
       * Return true only if other Money has the same currency
       * as this Money.
       */
-    public boolean isSameCurrencyAs(Money other){
+    public boolean isSameCurrencyAs(Money other) {
         currency == other?.currency
     }
 
@@ -216,4 +216,3 @@ final class Money implements Serializable, Comparable<Money>, MoneyExchange {
         }
     }
 }
-
