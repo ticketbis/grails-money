@@ -1,11 +1,10 @@
 package com.ticketbis.money
 
 import java.math.MathContext
-import java.math.BigDecimal
 import java.math.RoundingMode
 
 @groovy.transform.CompileStatic
-final class Money implements Serializable, Comparable<Money>, MoneyExchange {
+final class Money implements Serializable, Comparable<Money>, MoneyExchange, MoneyFormat {
     final BigDecimal amount
     final Currency currency
 
