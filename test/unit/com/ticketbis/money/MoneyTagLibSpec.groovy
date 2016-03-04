@@ -12,6 +12,7 @@ import java.text.DecimalFormatSymbols
 class MoneyTagLibSpec extends Specification {
 
     def setup() {
+        Locale.setDefault(new Locale('en', 'US'))
     }
 
     def cleanup() {
