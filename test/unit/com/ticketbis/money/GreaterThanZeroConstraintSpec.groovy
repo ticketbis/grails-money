@@ -1,6 +1,6 @@
 package com.ticketbis.money
 
-import com.ticketbis.money.constraints.GreaterThanZeroConstraint
+import com.ticketbis.money.validation.GreaterThanZeroConstraint
 import spock.lang.Specification
 
 class GreaterThanZeroConstraintSpec extends Specification {

@@ -1,4 +1,4 @@
-package com.ticketbis.money.constraints
+package com.ticketbis.money.validation
 
 import com.ticketbis.money.Money
 import org.codehaus.groovy.grails.validation.AbstractConstraint
