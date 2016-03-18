@@ -21,6 +21,7 @@ class MoneyGrailsPlugin {
     def description = '''\
 Grails plugin for manage money and currency exchange
 '''
+    def group = "com.ticketbis"
 
     // URL to the plugin's documentation
     def documentation = "http://grails.org/plugin/grails-money"
