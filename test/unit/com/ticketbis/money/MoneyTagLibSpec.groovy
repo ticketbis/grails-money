@@ -43,32 +43,4 @@ class MoneyTagLibSpec extends Specification {
         html =~ /name="testMoney_currency".*value="USD"/
     }
 
-    void "test money formatting"() {
-    given:
-        def money = new Money(1234.5G, 'RUB')
-
-    expect:
-        'RUB 1,234.50' == applyTemplate(
-            '<money:format value="${ money }" pattern="¤ ##,##0.00"/>', [money: money])
-    }
-
-    void "test money advanced formatting"() {
-    given:
-        DecimalFormatSymbols dfs = new DecimalFormatSymbols();
-        dfs.currencySymbol = 'руб.'
-        dfs.groupingSeparator = ' '
-        dfs.decimalSeparator = ','
-
-        def formatter = new DecimalFormat("##,##0 ¤")
-        formatter.decimalFormatSymbols = dfs
-
-        def money = new Money(1234.0G, 'RUB')
-
-    expect:
-        '1 234 руб.' == applyTemplate(
-            '<money:format value="${ money }" numberFormat="${ formatter }"/>',
-            [money: money, formatter: formatter])
-
-    }
-
 }

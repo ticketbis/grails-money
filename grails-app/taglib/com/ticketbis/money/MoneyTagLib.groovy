@@ -53,24 +53,4 @@ class MoneyTagLib {
             """
         }
     }
-
-    def format = { attrs ->
-        Money value = new Money(attrs.value)
-
-        NumberFormat formatter = null
-        if (attrs.numberFormat) {
-            formatter = attrs.numberFormat
-
-        } else if (attrs.pattern) {
-            formatter = new DecimalFormat(attrs.pattern)
-            formatter.currency = value.currency
-        }
-
-        if (formatter) {
-            out << formatter.format(value.amount)
-        } else {
-            out << formatNumber(type: 'currency', number: value.amount,
-                                currencyCode: value.currency)
-        }
-    }
 }
