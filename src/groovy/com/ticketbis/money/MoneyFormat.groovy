@@ -12,12 +12,17 @@ trait MoneyFormat {
     abstract Currency getCurrency()
     abstract BigDecimal getAmount()
 
-    String format(Locale locale = Locale.default) {
+    DecimalFormat getFormatter(Locale locale = Locale.default) {
         DecimalFormat currencyFormat = NumberFormat.getCurrencyInstance(resolveLocale(locale)) as DecimalFormat
         currencyFormat.currency = currency
         currencyFormat.maximumFractionDigits = currency.defaultFractionDigits
 
-        currencyFormat.format(amount)
+        return currencyFormat
+    }
+
+    String format(Locale locale = Locale.default) {
+        DecimalFormat currencyFormat = getFormatter(locale)
+        format(currencyFormat)
     }
 
     String format(NumberFormat numberFormat) {
