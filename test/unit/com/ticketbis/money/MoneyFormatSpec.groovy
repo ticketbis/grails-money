@@ -94,8 +94,10 @@ class MoneyFormatSpec extends Specification {
 
         where:
         amount       | currency | moneyFormattedAsNumber
-        '123456.789' | 'EUR'    | '123.456,789'
-        '123456.719' | 'USD'    | '123.456,719'
+        '123456'     | 'EUR'    | '123.456'
+        '123456.789' | 'EUR'    | '123.456,79'
+        '123456.719' | 'USD'    | '123.456,72'
+        '123456.719' | 'JPY'    | '123.457'
 
         money = getMoneyInstance(currency: currency, amount: amount)
     }
@@ -106,8 +108,9 @@ class MoneyFormatSpec extends Specification {
 
         where:
         amount       | currency | moneyFormattedAsNumber
-        '123456.789' | 'EUR'    | '123,456.789'
-        '123456.719' | 'USD'    | '123,456.719'
+        '123456.789' | 'EUR'    | '123,456.79'
+        '123456.719' | 'USD'    | '123,456.72'
+        '123456.719' | 'JPY'    | '123,457'
 
         money = getMoneyInstance(currency: currency, amount: amount)
     }
