@@ -37,6 +37,7 @@ trait MoneyFormat {
 
     String formatNumber(Locale locale = Locale.default) {
         DecimalFormat decimalFormat = NumberFormat.getNumberInstance(resolveLocale(locale)) as DecimalFormat
+        decimalFormat.maximumFractionDigits = currency.defaultFractionDigits
         decimalFormat.format(amount);
     }
 
