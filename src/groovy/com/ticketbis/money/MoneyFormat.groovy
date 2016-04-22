@@ -3,6 +3,8 @@ package com.ticketbis.money
 import groovy.transform.CompileStatic
 import org.springframework.util.StringUtils
 
+import java.math.RoundingMode
+
 import java.text.DecimalFormat
 import java.text.NumberFormat
 
@@ -44,6 +46,10 @@ trait MoneyFormat {
         DecimalFormat decimalFormat = NumberFormat.getNumberInstance(resolveLocale(locale)) as DecimalFormat
         decimalFormat.maximumFractionDigits = currency.defaultFractionDigits
         decimalFormat.format(amount);
+    }
+
+    Money round(RoundingMode rounding = RoundingMode.HALF_EVEN) {
+        setScale(currency.defaultFractionDigits, rounding)
     }
 
     @CompileStatic
