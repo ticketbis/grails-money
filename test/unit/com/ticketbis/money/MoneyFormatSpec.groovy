@@ -88,7 +88,7 @@ class MoneyFormatSpec extends Specification {
         thrown(IllegalStateException)
     }
 
-    def "should format #money  as a number using the default locale"() {
+    def "should format #money as a number using the default locale"() {
         expect:
         moneyFormattedAsNumber == money.formatNumber()
 
@@ -102,7 +102,7 @@ class MoneyFormatSpec extends Specification {
         money = getMoneyInstance(currency: currency, amount: amount)
     }
 
-    def "should format #money  as a number using the custom locale"() {
+    def "should format #money as a number using the custom locale"() {
         expect:
         moneyFormattedAsNumber == money.formatNumber(Locale.US)
 
@@ -111,6 +111,19 @@ class MoneyFormatSpec extends Specification {
         '123456.789' | 'EUR'    | '123,456.79'
         '123456.719' | 'USD'    | '123,456.72'
         '123456.719' | 'JPY'    | '123,457'
+
+        money = getMoneyInstance(currency: currency, amount: amount)
+    }
+
+    def "should return rounded Money: #expected"() {
+        expect:
+        money.round() == getMoneyInstance(currency: currency, amount: expected)
+
+        where:
+        amount       | currency | expected
+        '123456.789' | 'EUR'    | '123456.79'
+        '123456.711' | 'USD'    | '123456.71'
+        '123456.719' | 'JPY'    | '123457'
 
         money = getMoneyInstance(currency: currency, amount: amount)
     }
