@@ -5,6 +5,9 @@ import java.math.RoundingMode
 
 @groovy.transform.CompileStatic
 final class Money implements Serializable, Comparable<Money>, MoneyExchange, MoneyFormat {
+
+    private static final long serialVersionUID = 7781578698983233143L;
+
     final BigDecimal amount
     final Currency currency
 
