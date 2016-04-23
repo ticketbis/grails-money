@@ -1,8 +1,11 @@
 package com.ticketbis.money
 
+import groovy.transform.CompileStatic
+
 /**
   * Extensions for Number
   */
+@CompileStatic
 class NumberMoneyExtension {
 
     static Money plus(Number self, Money money) {
