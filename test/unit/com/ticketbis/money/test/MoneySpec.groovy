@@ -6,10 +6,6 @@ import com.ticketbis.money.*
 
 class MoneySpec extends Specification {
 
-    void setup() {
-        Number.mixin(NumberMoneyExtension)
-    }
-
     void "test money constructors"() {
     given:
         def eur12 = new Money(12.0G, 'EUR')
