@@ -1,4 +1,0 @@
-
-moduleName=numberMoney
-moduleVersion=1.0
-extensionClasses=com.ticketbis.money.NumberMoneyExtension

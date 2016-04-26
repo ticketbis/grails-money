@@ -1,6 +1,7 @@
-import com.ticketbis.money.Money
-import com.ticketbis.money.validation.GreaterThanZeroConstraint
 import grails.converters.JSON
+import com.ticketbis.money.Money
+import com.ticketbis.money.NumberMoneyExtension
+import com.ticketbis.money.validation.GreaterThanZeroConstraint
 import org.codehaus.groovy.grails.validation.ConstrainedProperty
 
 class MoneyGrailsPlugin {
@@ -63,6 +64,7 @@ Grails plugin for manage money and currency exchange
     }
 
     def doWithDynamicMethods = { ctx ->
+        Number.mixin(NumberMoneyExtension)
     }
 
     def doWithApplicationContext = { ctx ->
