@@ -2,6 +2,7 @@ import grails.converters.JSON
 import com.ticketbis.money.Money
 import com.ticketbis.money.NumberMoneyExtension
 import com.ticketbis.money.validation.GreaterThanZeroConstraint
+import com.ticketbis.money.validation.GreaterOrEqualZeroConstraint
 import org.codehaus.groovy.grails.validation.ConstrainedProperty
 
 class MoneyGrailsPlugin {
@@ -61,6 +62,10 @@ Grails plugin for manage money and currency exchange
         ConstrainedProperty.registerNewConstraint(
             GreaterThanZeroConstraint.CONSTRAINT_NAME,
             GreaterThanZeroConstraint)
+
+        ConstrainedProperty.registerNewConstraint(
+            GreaterOrEqualZeroConstraint.CONSTRAINT_NAME,
+            GreaterOrEqualZeroConstraint)
     }
 
     def doWithDynamicMethods = { ctx ->

@@ -4,12 +4,12 @@ import com.ticketbis.money.Money
 import org.codehaus.groovy.grails.validation.AbstractConstraint
 import org.springframework.validation.Errors
 
-class GreaterThanZeroConstraint extends AbstractConstraint {
+class GreaterOrEqualZeroConstraint extends AbstractConstraint {
 
-    private static final String DEFAULT_INVALID_MESSAGE_CODE = 'default.gtZero.invalid'
-    static final String CONSTRAINT_NAME = 'gtZero'
+    private static final String DEFAULT_INVALID_MESSAGE_CODE = 'default.gteZero.invalid'
+    static final String CONSTRAINT_NAME = 'gteZero'
 
-    private boolean gtZero
+    private boolean gteZero
 
     void setParameter(Object constraintParameter) {
         if (!(constraintParameter instanceof Boolean)) {
@@ -17,7 +17,7 @@ class GreaterThanZeroConstraint extends AbstractConstraint {
                 + " of property [${constraintPropertyName}]"
                 + " of class [${constraintOwningClass}] must be a boolean value")
         }
-        gtZero = ((Boolean) constraintParameter).booleanValue()
+        gteZero = ((Boolean) constraintParameter).booleanValue()
         super.setParameter(constraintParameter)
     }
 
@@ -37,6 +37,6 @@ class GreaterThanZeroConstraint extends AbstractConstraint {
     }
 
     boolean validate(value) {
-        value instanceof Money && value > Money.ZERO
+        value instanceof Money && value >= Money.ZERO
     }
 }
