@@ -14,12 +14,18 @@ trait MoneyFormat {
     abstract Currency getCurrency()
     abstract BigDecimal getAmount()
 
-    DecimalFormat getFormatter(Locale locale = Locale.default) {
-        DecimalFormat currencyFormat = NumberFormat.getCurrencyInstance(resolveLocale(locale)) as DecimalFormat
-        currencyFormat.currency = currency
-        currencyFormat.maximumFractionDigits = currency.defaultFractionDigits
+    DecimalFormat getFormatter(Locale locale = Locale.default, boolean includeCurrency = true) {
+        DecimalFormat formatter
+        if (includeCurrency) {
+            formatter = NumberFormat.getCurrencyInstance(locale) as DecimalFormat
+        } else {
+            formatter = NumberFormat.getNumberInstance(locale) as DecimalFormat
+        }
 
-        return currencyFormat
+        formatter.currency = currency
+        formatter.maximumFractionDigits = currency.defaultFractionDigits
+
+        return formatter
     }
 
     String format(Locale locale = Locale.default) {
@@ -43,24 +49,11 @@ trait MoneyFormat {
     }
 
     String formatNumber(Locale locale = Locale.default) {
-        DecimalFormat decimalFormat = NumberFormat.getNumberInstance(resolveLocale(locale)) as DecimalFormat
-        decimalFormat.maximumFractionDigits = currency.defaultFractionDigits
-        decimalFormat.format(amount);
+        DecimalFormat decimalFormat = getFormatter(locale, false)
+        format(decimalFormat);
     }
 
     Money round(RoundingMode rounding = RoundingMode.HALF_EVEN) {
         setScale(currency.defaultFractionDigits, rounding)
-    }
-
-    @CompileStatic
-    static Locale resolveLocale(Object locale) {
-        Locale myLocale
-        if (locale instanceof Locale) {
-            myLocale = (Locale) locale
-        } else if (locale != null) {
-            myLocale = StringUtils.parseLocaleString(locale.toString())
-        }
-
-        return myLocale
     }
 }
