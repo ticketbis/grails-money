@@ -37,6 +37,6 @@ class GreaterThanZeroConstraint extends AbstractConstraint {
     }
 
     boolean validate(value) {
-        value instanceof Money && value > Money.ZERO
+        value instanceof Money && value.amount > BigDecimal.ZERO
     }
 }
