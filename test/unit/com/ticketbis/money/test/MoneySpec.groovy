@@ -106,4 +106,57 @@ class MoneySpec extends Specification {
         eur20.setScale(0, RoundingMode.CEILING) == new Money('21 EUR')
         eur20.setScale(0, RoundingMode.HALF_DOWN) == new Money('20 EUR')
     }
+
+    def "test fromMinorUnits"() {
+    given:
+        def eur220cents = Money.fromMinorUnits(220, 'EUR')
+        def eur200cents = Money.fromMinorUnits(200, 'EUR')
+    expect:
+        eur220cents == new Money(2.20, 'EUR')
+        eur200cents == new Money(2, 'EUR')
+    }
+
+    def "test majorUnits"() {
+    given:
+        def eurCents = new Money(2.35, 'EUR')
+        def bdhCents = new Money(-1.845, 'BHD')
+        def noCents = new Money(4, 'EUR')
+    expect:
+        eurCents.majorUnits() == 200
+        bdhCents.majorUnits() == -1000
+        noCents.majorUnits() == 400
+    }
+
+    def "test minorUnits"() {
+    given:
+        def eurCents = new Money(2.35, 'EUR')
+        def bdhCents = new Money(-1.345, 'BHD')
+        def noCents = new Money(4, 'EUR')
+    expect:
+        eurCents.minorUnits() == 235
+        bdhCents.minorUnits() == -1345
+        noCents.minorUnits() == 400
+    }
+
+    def "test majorPart"() {
+    given:
+        def eurCents = new Money(2.35, 'EUR')
+        def bdhCents = new Money(-1.345, 'BHD')
+        def noCents = new Money(4, 'EUR')
+    expect:
+        eurCents.majorPart() == 2
+        bdhCents.majorPart() == -1
+        noCents.majorPart() == 4
+    }
+
+    def "test minorPart"() {
+    given:
+        def eurCents = new Money(2.35, 'EUR')
+        def bdhCents = new Money(-1.345, 'BHD')
+        def noCents = new Money(4, 'EUR')
+    expect:
+        eurCents.minorPart() == 35
+        bdhCents.minorPart() == -345
+        noCents.minorPart() == 0
+    }
 }

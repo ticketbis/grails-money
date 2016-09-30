@@ -6,7 +6,7 @@ import java.math.RoundingMode
 @groovy.transform.CompileStatic
 final class Money implements Serializable, Comparable<Money>, MoneyExchange, MoneyFormat {
 
-    private static final long serialVersionUID = 7781578698983233143L;
+    private static final long serialVersionUID = 7781578698983233143L
 
     final BigDecimal amount
     final Currency currency
@@ -57,6 +57,15 @@ final class Money implements Serializable, Comparable<Money>, MoneyExchange, Mon
         this.currency = currency
     }
 
+    static Money fromMinorUnits(Number minorAmount, Currency currency) {
+        BigDecimal amount = ((BigDecimal)minorAmount).scaleByPowerOfTen(-currency.defaultFractionDigits)
+        new Money(amount, currency)
+    }
+
+    static Money fromMinorUnits(Number minorAmount, String currencyCode) {
+        fromMinorUnits(minorAmount, Currency.getInstance(currencyCode))
+    }
+
     int hashCode() {
         amount.hashCode() ^ currency.hashCode()
     }
@@ -77,14 +86,17 @@ final class Money implements Serializable, Comparable<Money>, MoneyExchange, Mon
     }
 
     int compareTo(Money other) {
-        if (amount == 0 && other.amount == 0)
+        if (amount == 0 && other.amount == 0) {
             return 0 // No money :[
+        }
 
-        if (currency == other.currency)
+        if (currency == other.currency) {
             return amount <=> other.amount
+        }
 
-        if (Money.getCurrentExchange())
+        if (Money.currentExchange) {
             return amount <=> other.exchangeTo(currency).amount
+        }
 
         currency.currencyCode <=> other.currency.currencyCode
     }
@@ -203,8 +215,66 @@ final class Money implements Serializable, Comparable<Money>, MoneyExchange, Mon
       * Return true only if other Money has the same currency
       * as this Money.
       */
-    public boolean isSameCurrencyAs(Money other) {
+    boolean isSameCurrencyAs(Money other) {
         currency == other?.currency
+    }
+
+    /**
+     * Gets the amount in major units as a {@code long}.
+     * <p>
+     * This returns the Money amount in terms of the major units of the
+     * currency, truncating the amount if necessary. For example, 'EUR 2.35'
+     * will return 200, and 'BHD -1.845' will return -1000.
+     * <p>
+     *
+     * @return the major units of the amount
+     */
+    long majorUnits() {
+        amount.toBigInteger().longValue() * (10 ** (currency.defaultFractionDigits))
+    }
+
+    /**
+     * Gets the minor part as a {@code long}.
+     * <p>
+     * This returns the Money amount in terms of the minor units of the
+     * currency, truncating the whole part if necessary. For example, 'EUR 2.35'
+     * will return 'EUR 235', and 'BHD -1.345' will return 'BHD -1345'.
+     * <p>
+     *
+     * @return the minor units of the amount
+     */
+    long minorUnits() {
+        toMinorUnits(amount)
+    }
+
+    private long toMinorUnits(BigDecimal amount) {
+        amount.scaleByPowerOfTen(currency.defaultFractionDigits).longValue()
+    }
+
+    /**
+    * Gets the amount major part as a {@code long}.
+    * <p>
+    * This returns the Money amount in terms of the major units of the currency, truncating the
+    * amount if necessary. For example, 'EUR 2.35' will return 'EUR 2', and 'BHD -1.345' will
+    * return 'BHD -1'.
+    * <p>
+    * @return the major units part of the amount
+    */
+    long majorPart() {
+        amount.longValue()
+    }
+
+    /**
+     * Extract the minor part as a {@code long}.
+     * <p>
+     * This returns the Money amount in terms of the minor units of the
+     * currency, truncating the whole part if necessary. For example, 'EUR 2.35'
+     * will return 35, and 'BHD -1.345' will return -345.
+     * <p>
+     * @return the minor units part of the amount
+     */
+    long minorPart() {
+        toMinorUnits(amount - majorPart())
     }
 
     /**
