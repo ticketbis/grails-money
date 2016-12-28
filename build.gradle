@@ -1,0 +1,56 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        maven { url "https://repo.grails.org/grails/core" }
+    }
+    dependencies {
+        classpath "org.grails:grails-gradle-plugin:$grailsVersion"
+        classpath "com.bertramlabs.plugins:asset-pipeline-gradle:2.8.2"
+    }
+}
+
+version "0.2.0"
+group "com.ticketbis"
+
+apply plugin:"org.grails.grails-plugin"
+apply plugin:"org.grails.grails-plugin-publish"
+
+repositories {
+    mavenLocal()
+    maven { url "https://repo.grails.org/grails/core" }
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.grails:grails-bom:$grailsVersion"
+    }
+    applyMavenExclusions false
+}
+
+dependencies {
+    compile "org.springframework.boot:spring-boot-starter-logging"
+    compile "org.springframework.boot:spring-boot-starter-tomcat"
+    compile "org.grails:grails-dependencies"
+    profile "org.grails.profiles:web-plugin"
+    testCompile "org.grails:grails-plugin-testing"
+    compile "org.grails.plugins:hibernate4"
+}
+
+bootRun {
+    jvmArgs = ['-Dspring.output.ansi.enabled=always']
+}// enable if you wish to package this plugin as a standalone application
+bootRepackage.enabled = false
+grailsPublish {
+    // TODO: Provide values here
+    user = 'user'
+    key = 'key'
+    githubSlug = 'ticketbis/grails-money'
+    license {
+        name = 'Apache-2.0'
+    }
+    title = "Grails Money Plugin"
+    desc = "Grails plugin for money and currency exchange management"
+    developers = [xala3pa: "Álvaro Salazar", endSly: "Endika Gutiérrez", dhighwayman: "David Santamaria", afilardo: "Alfredo Filardo"]
+    portalUser = ""
+    portalPassword = ""    
+}

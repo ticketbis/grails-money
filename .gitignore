@@ -1,8 +1,6 @@
-# "temporary" build files
-/target/
-/out/
-
- #IntelliJ Files
-*.iml
+build/
+.gradle/
 .idea
-
+*.iml
+.project
+.classpath

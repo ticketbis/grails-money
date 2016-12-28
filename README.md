@@ -33,3 +33,7 @@ new Money('100 EUR') / 2 == new Money('50 EUR')
 new Money('100 EUR') * 2 == new Money('200 EUR')
 new Money('100 EUR') + new Money('20 EUR') == new Money('120 EUR')
 ```
+
+## Working with grails 2.x
+
+To work with grails version 2.x check <https://github.com/ticketbis/grails-money/tree/money-grails-2x/>.
