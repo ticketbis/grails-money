@@ -86,8 +86,8 @@ final class Money implements Serializable, Comparable<Money>, MoneyExchange, Mon
     }
 
     int compareTo(Money other) {
-        if (amount == 0 && other.amount == 0) {
-            return 0 // No money :[
+        if (amount == 0 || other.amount == 0) {
+            return amount <=> other.amount // One no money :_[
         }
 
         if (currency == other.currency) {

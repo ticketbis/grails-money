@@ -5,6 +5,13 @@ Status](https://travis-ci.org/ticketbis/grails-money.png?branch=master)](https:/
 
 Grails plugin for money and currency exchange management
 
+## Build and install in local repository
+
+```
+$ grails package-plugin
+$ grails maven-install
+```
+
 ## Installation
 
 Add dependency to your BuildConfig;

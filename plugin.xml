@@ -1,0 +1,11 @@
+<plugin name='money' version='0.1.22' grailsVersion='2.4 &gt; *'>
+  <author>David Santamaría &amp; Álvaro Salazar &amp; Endika Gutiérrez</author>
+  <title>Grails Money Plugin</title>
+  <description>Grails plugin for manage money and currency exchange
+</description>
+  <documentation>http://grails.org/plugin/grails-money</documentation>
+  <type>MoneyGrailsPlugin</type>
+  <resources>
+    <resource>com.ticketbis.money.MoneyTagLib</resource>
+  </resources>
+</plugin>
